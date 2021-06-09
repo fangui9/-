@@ -1,0 +1,218 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="index.css">
+</head>
+<style></style>
+
+<body onkeyup="bianse(event)" onkeydown="lighton(event)" bgcolor="black" style="color: cornsilk;">
+    <button id="kaishi" onclick="randomCoding()"
+        style="vertical-align:middle"><span>开始</span></button><br><br><br><br><br><br><br>
+    <div id="jishi" onkeyup="int"></div><br><br>
+
+    <button id="tingzhi" onclick="ting()"><span>停止</span></button>
+    <button id="juxu" onclick="juxu()"><span>继续</span></button>
+    <button id="chongxin" onclick="qingchu()"><span>初始化</span></button>
+    <button id="shuoming" onclick="shuoming()"><span>说明书</span></button>
+    <div style=float:left><img id="myimage" src="chi2.png"></div><br><br><br>
+    <div id="body"></div>
+</body>
+
+</html>
+
+<script>
+    // 简单的打字软件
+    // 本网页打开以后，会在屏幕中顺序的出现 各类字母，比如 a b c d e f j
+    // 这个时候用户如果 按下按键 a，那么 屏幕上的 a 会变成绿色，
+    // 必须a 变成绿色以后 才可以继续识别 b 的按键，以此类推就是一个简单的打字练习软件
+
+    // 你甚至可以做的更丰富一些，比如 速度记录，打完一排后 切换新的字母
+
+    // 技术难点：如何随机出字母？请网上搜索，随机得到字母以后 最好是存储到数组里面哦。
+
+    var num = 0;
+    var arr = [];
+    var brr = [];
+
+    var t1 = null;
+    var sum;
+    var isclick = true;
+    var ff = true;
+    var fff = false;        //
+    var biaoqian = true;
+    var huanying = true;
+    var zhengque = 0;
+    var cuowu = 0;
+    var jishi2 = null;
+    var zhengquelv;
+    var jutingzhi = true;
+    function randomCoding() {       //开始
+
+        if (biaoqian) {
+
+
+
+
+            fff = true; //计时器判定
+
+            clearInterval(t1);
+            t1 = setInterval(clock, 1000);                       //这个计时器我没太搞懂 我如果不事先给t1 设一个变量null，我就无法把他停下
+            jishi2 = setInterval(jishiqi, 50);
+            while (true) {
+
+
+                if (huanying) {
+                    sum = prompt("欢迎欢迎！请输入想打字的字母长度！请全部打完哦！");
+                    sum = Math.floor(sum);
+                    huanying = false;
+                }
+                if (Number(sum) == sum) {
+
+                    if (ff && sum < 99 && sum != 0 && sum > 1) {
+                        alert("打完字母后按任意键会刷新哟！")
+                        ff = false;
+                    }
+
+                    if (sum > 99 | sum == 0 | sum < 1) {
+
+                        if (sum == 0) {
+                            alert("请输入0以上的数字");
+                            huanying = true;
+                        } else if (sum > 99) {
+                            alert("太长了！！！！显卡(你想闻老娘的体香吗？？？（请小于99）)");
+                            huanying = true;
+                        } else if (sum < 1) {
+                            alert("你好像有那个大病！负数怎么出字母！！！");
+                            huanying = true;
+                        }
+                    } else {
+                        break;
+                    }
+                } else {
+                    alert("请输入数字");
+                    huanying = true;
+                }
+            }
+
+            var n = sum;                                          //这个值可以改变的，对应的生成多少个字母，根据自己需求所改
+            for (var i = 0; i < n; i++) {                       //循环
+                zmcode = 65 + Math.floor(Math.random() * 26);   //随机生成数字
+                var zm = String.fromCharCode(zmcode);           //随机生成字母
+                arr[i] = zm;                                        //arr = 字母
+                brr[i] = zmcode;                                    //brr = 数字
+                var span = document.createElement("span");          //创建标签
+                document.body.appendChild(span);
+                span.setAttribute("id", "m" + i);                       //给每个标签增加id
+                document.getElementById("m" + i).innerHTML = arr[i] + "&nbsp";//每一个字母都加入到标签中
+
+            }
+
+            huanying = false;
+            return sum;
+        }
+        biaoqian = false;
+    }
+
+
+
+
+
+    function bianse(event) {            //按键就会发生
+        if (jutingzhi) {
+            document.getElementById('myimage').src = "chi2.png";
+            if (event.keyCode == brr[num] && num != Number(sum)) {  //判断按键是否是和文本一样
+                zhengque++;
+                let span = document.getElementsByTagName("span");
+
+                for (let i = num; i < arr.length; i++) {
+                    //document.getElementById("m" + i).setAttribute("class", "co")
+                    num++;
+                    let zxc = document.getElementById("m" + i);
+                    document.body.removeChild(zxc);
+                    break;
+                }
+            } else if (num == Number(sum)) {         //当打满的时候刷新
+
+                huanying = false;
+                num = 0;
+                biaoqian = true;
+                clearInterval(t1);
+                //number = 0;
+                randomCoding();
+
+
+            } else {
+                cuowu++
+
+            }
+
+        }
+    }
+
+    var number = 0;
+    function clock() {          //计时器
+        number++;
+
+    }
+
+    /*function guan() {                        //计时器1关
+        window.clearInterval(t1);
+        number = 0;
+    }*/
+
+    function ting() {                   //计时器1停
+        clearInterval(t1);
+        isclick = false;
+        jutingzhi = false;
+    }
+
+    function juxu() {                   //计时器1继续
+        jutingzhi = true;
+        if (fff) {
+            if (isclick) {
+
+            } else {
+                t1 = setInterval(clock, 1000);
+                isclick = true;
+            }
+        }
+    }
+    var fan = "看看你是不是究极无敌小打手";
+    zhengquelv = 0;
+    function jishiqi() {         //计时器2
+
+        zhengquelv = (zhengque / (zhengque + cuowu)) * 100;   //正确率
+        zhengquelv = zhengquelv.toFixed(2);         //百分比只保留小数点后两位
+        dazisudu = (zhengque + cuowu) / number;
+        dazisudu = dazisudu.toFixed(2);
+        if (zhengquelv > 90) {
+            fan = "无敌是多么的寂寞~~";
+        } else if (zhengquelv < 90 && zhengquelv > 80) {
+            fan = "np6666啊";
+        } else if (zhengquelv < 80 && zhengquelv > 70) {
+            fan = "就这？"
+        } else if (zhengquelv < 70) {
+            fan = "你这是手？？？！！！我奶奶打字都比你好";
+        }
+        document.getElementById("jishi").innerHTML = Number(number) - 1 + ":" + "秒" + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + "错误数" + ":" + cuowu + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + "当前准确率" + ":" + zhengquelv + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + "打字个数/秒" + ":" + dazisudu + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + fan;
+
+    }
+
+
+    function lighton() {                //图片控制
+        document.getElementById('myimage').src = "chi1.png";
+    }
+    function lightoff() {
+        document.getElementById('myimage').src = "chi2.png";
+    }
+
+    function qingchu() {
+        location.reload();
+    }
+
+    function shuoming() {
+        alert("说明：本游戏一切解释权归开发者所有！！！！！！！\n 小数点默认为无，打完字母后按任意键刷新新字母，停止可以暂停打字, 开始键二次点击默认为刷新字母")
+    }
+
+</script>
